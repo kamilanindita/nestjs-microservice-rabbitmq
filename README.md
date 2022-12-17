@@ -1,4 +1,4 @@
-# nestjs-microservice-tcp
+# nestjs-microservice-rabbitmq
 [Nestjs microservice](https://docs.nestjs.com/microservices/rabbitmq) use the RabbitMQ transport layer.
 
 Queues in RabbitMQ can be durable or transient. The metadata of a durable queue is stored on the disk. If the queue is not durable, it is deleted during boot and would not survive a restart. It would delete not-consumed messages.
