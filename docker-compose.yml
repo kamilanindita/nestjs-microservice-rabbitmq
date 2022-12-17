@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+    api_gateway:
+        container_name: api_gateway
+        image: api-gateway:1.0.0
+        build:
+            context: ./api-gateway
+            target: production
+            dockerfile: ./Dockerfile
+        command: npm run start:prod
+        networks:
+            - nestjs-microservice-rabbitmq
+
+        restart: unless-stopped
+        env_file: .env.prod
+        ports:
+            - 3000:3000
+        depends_on:
+            - rabbitmq
+
+    customer_service:
+        container_name: api_customer_service
+        image: api-customer-services:1.0.0
+        build:
+            context: ./customer-service
+            target: production
+            dockerfile: ./Dockerfile
+        command: npm run start:prod
+        networks:
+            - nestjs-microservice-rabbitmq
+
+        restart: unless-stopped
+        env_file: .env.prod
+        depends_on:
+            - rabbitmq
+
+    book_service:
+        container_name: api_book_service
+        image: api-book-services:1.0.0
+        build:
+            context: ./book-service
+            target: production
+            dockerfile: ./Dockerfile
+        command: npm run start:prod
+        networks:
+            - nestjs-microservice-rabbitmq
+
+        restart: unless-stopped
+        env_file: .env.prod
+        depends_on:
+            - rabbitmq
+
+    rabbitmq:
+        container_name: rabbbitmq_service
+        image: rabbitmq:3-management
+        volumes:
+            -  ./rabbitmq/data/:/var/lib/rabbitmq/
+            - ./rabbitmq/log/:/var/log/rabbitmq
+        ports:
+            - '5672:5672'
+            - '15672:15672'
+        networks:
+            - nestjs-microservice-rabbitmq
+
+networks:
+    nestjs-microservice-rabbitmq:
